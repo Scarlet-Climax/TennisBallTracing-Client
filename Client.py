@@ -10,7 +10,6 @@ import mxnet as mx
 from XJBXX import RECV,SEND,Predict
 from tennisdt import getqwq
 from gluoncv import model_zoo, data, utils
-
 HOST = '192.168.43.116'
 PORT = 10000
 buffSize = 655355
@@ -21,7 +20,8 @@ def getFPS():
     sec = time.time() - t
     t = time.time()
     return 1/sec
-
+def nothing(x):
+    pass
 
 net = gcv.model_zoo.get_model(
     'yolo3_mobilenet1.0_coco', pretrained=True, ctx=mx.gpu(0))
@@ -32,6 +32,9 @@ DRI.connect(('192.168.43.116', 9920))
 print('now waiting for frames...')
 cnt = 0
 x, y, r = 0, 0, 0
+cv2.namedWindow("frames")
+cv2.createTrackbar("a", "frames", 0, 300, nothing)
+cv2.createTrackbar("b", "frames", 0, 510, nothing)
 while True:
     #time.sleep(0.03)
     header,data=RECV(CAM)

@@ -3,13 +3,24 @@ import cv2
 import time
 import imutils
 
+def contrast_img(img1, c, b):
+    rows, cols, channels = img1.shape
+    blank = np.zeros([rows, cols, channels], img1.dtype)
+    dst = cv2.addWeighted(img1, c, blank, 1 - c, b)
+    return dst
+
+
 def getqwq(img):
+    a = cv2.getTrackbarPos("a", "frames")
+    b = cv2.getTrackbarPos("b", "frames")
+
+    img = contrast_img(img, a/100, b-255)
 
     tennislower = (29, 86, 6)
     tennisupper = (64, 255, 255)
 
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    #print(hsv)
+    # print(hsv)
     mask = cv2.inRange(hsv, tennislower, tennisupper)
     cv2.imshow("mask", mask)
     mask = cv2.erode(mask, None, iterations=2)
@@ -26,16 +37,15 @@ def getqwq(img):
         center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
         if radius > 10:
             cv2.circle(img, (int(x), int(y)), int(radius),
-                            (0, 255, 255), 2)
+                       (0, 255, 255), 2)
             cv2.circle(img, center, 5, (0, 0, 255), -1)
-        return img,x,y,radius
+        return img, x, y, radius
         #cv2.imshow("Frame", img)
-    return img,-1,-1,-1
+    return img, -1, -1, -1
 
 
 if __name__ == '__main__':
-    
+
     img = cv2.imread("pic/50.jpg")
     cv2.imshow("Frame", getqwq(img))
     cv2.waitKey(10000)
-    
