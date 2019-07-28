@@ -5,12 +5,15 @@ import struct
 import sys
 import time
 import json
-import gluoncv as gcv
-import mxnet as mx
+GPU = 0
+if GPU==1:
+    import gluoncv as gcv
+    import mxnet as mx
+    from gluoncv import model_zoo, data, utils
 from XJBXX import RECV,SEND,Predict
 from tennisdt import getqwq
-from gluoncv import model_zoo, data, utils
-HOST = '192.168.43.116'
+
+HOST = '192.168.1.107'
 PORT = 10000
 buffSize = 655355
 t = time.time()
@@ -24,11 +27,11 @@ def nothing(x):
     pass
 
 net = gcv.model_zoo.get_model(
-    'yolo3_mobilenet1.0_coco', pretrained=True, ctx=mx.gpu(0))
+        'yolo3_mobilenet1.0_coco', pretrained=True, ctx=mx.gpu(0)) if GPU==1 else 0
 CAM = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-CAM.connect(('192.168.43.116', 10011))
+CAM.connect((HOST, 10011))
 DRI = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-DRI.connect(('192.168.43.116', 9920))
+DRI.connect((HOST, 9920))
 print('now waiting for frames...')
 cnt = 0
 x, y, r = 0, 0, 0
@@ -53,7 +56,9 @@ while True:
         if (cnt % 5 == 0):
             #cv2.imwrite('pic/{}.jpg'.format(cnt), imgdecode)
             #cv2.imwrite('new.jpg'.format(cnt), imgdecode)
-            Predict(net, imgdecode)
+            if GPU == 1:
+                Predict(net, imgdecode)
+            pass
         img, x, y, r = getqwq(imgdecode)
         cv2.putText(img, "FPS={:.3} X={} Y={}".format(getFPS(), round(x), round(y)), (0, 240),
                     cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
