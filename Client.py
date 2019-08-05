@@ -13,7 +13,8 @@ if GPU==1:
 from XJBXX import RECV,SEND,Predict
 from tennisdt import getqwq
 
-HOST = '192.168.1.107'
+#HOST = '169.254.189.95'
+HOST = "192.168.43.116"
 PORT = 10000
 buffSize = 655355
 t = time.time()
@@ -60,16 +61,20 @@ while True:
                 Predict(net, imgdecode)
             pass
         img, x, y, r = getqwq(imgdecode)
-        cv2.putText(img, "FPS={:.3} X={} Y={}".format(getFPS(), round(x), round(y)), (0, 240),
-                    cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
-        cv2.imshow('frames', img)
-        key = cv2.waitKey(1)
+        if GPU==0:
+            cv2.putText(img, "FPS={:.3} X={} Y={}".format(getFPS(), round(x), round(y)), (0, 240),
+                        cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
+            cv2.imshow('frames', img)
+        else:
+            pass
+        key = cv2.waitKey(20 if GPU==1 else 35)
         if key == 27:
             break
     except:
         continue
     
-    msg = [{'x': x, 'y': y, 'r': r, 'key': key}]
+    msg = [{'x': x, 'y': y, 'r': r, 'key': key,'time':time.time()}]
+    print(json.dumps(msg))
     SEND(DRI, json.dumps(msg))
     #DRI.sendall(json.dumps(msg).encode('utf-8'))
 DRI.close()
