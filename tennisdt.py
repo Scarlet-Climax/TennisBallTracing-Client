@@ -22,7 +22,7 @@ def getqwq(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # print(hsv)
     mask = cv2.inRange(hsv, tennislower, tennisupper)
-    #cv2.imshow("mask", mask)
+    cv2.imshow("mask", mask)
     mask = cv2.erode(mask, None, iterations=2)
     mask = cv2.dilate(mask, None, iterations=2)
 

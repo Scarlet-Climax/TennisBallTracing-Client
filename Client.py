@@ -5,7 +5,7 @@ import struct
 import sys
 import time
 import json
-GPU = 0
+from para import GPU
 if GPU==1:
     import gluoncv as gcv
     import mxnet as mx
@@ -80,3 +80,6 @@ while True:
 DRI.close()
 CAM.close()
 cv2.destroyAllWindows()
+
+##DON'T README
+##5Lul5ZCO6L+Y5oOz57un57ut5bim5Y+v54ix55qE6Zif6ZW/5bCP5aeQ5aeQ

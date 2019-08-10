@@ -1,10 +1,12 @@
 import socket
 import struct
 import json
-from gluoncv import model_zoo, data, utils
+from para import GPU
+if GPU==1:
+    from gluoncv import model_zoo, data, utils
+    import gluoncv as gcv
+    import mxnet as mx
 import cv2
-import gluoncv as gcv
-import mxnet as mx
 from matplotlib import pyplot as plt
 import random
 
